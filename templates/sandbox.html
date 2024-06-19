@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Sandbox</title>
+</head>
+<body>
+    <h1>Admin Sandbox</h1>
+    <form method="POST">
+        <textarea name="script" rows="10" cols="50">{{ script }}</textarea><br>
+        <input type="text" name="class_name" placeholder="Class Name"><br>
+        <input type="text" name="method_name" placeholder="Method Name"><br>
+        <input type="text" name="params" placeholder="Params (JSON format)"><br>
+        <button type="submit">Run Script</button>
+    </form>
+    {% if result is not none %}
+    <h2>Result</h2>
+    <pre>{{ result }}</pre>
+    <h2>Stdout</h2>
+    <pre>{{ stdout }}</pre>
+    <h2>Stderr</h2>
+    <pre>{{ stderr }}</pre>
+    {% endif %}
+</body>
+</html>

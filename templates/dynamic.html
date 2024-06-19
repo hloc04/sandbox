@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run Python Script</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        textarea, input {
+            width: 100%;
+            margin: 10px 0;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Run Python Script</h1>
+    <form id="scriptForm">
+        <label for="script">Python Script:</label>
+        <textarea id="script" name="script" rows="10">!pip install pandas
+
+            import pandas as pd
+            
+            class DataProcessor:
+                def run(self, data):
+                    df = pd.DataFrame(data)
+                    return df.describe().to_json()</textarea>
+        <label for="params">Parameters (JSON):</label>
+        <textarea id="params" name="params" rows="5" placeholder="">{
+            "data": {
+                "A": [1, 2, 3, 4],
+                "B": [5, 6, 7, 8]
+            }
+        }</textarea>
+        <label for="class_name">Class Name:</label>
+        <input type="text" id="class_name" name="class_name" placeholder="DataProcessor">
+        <label for="method_name">Method Name:</label>
+        <input type="text" id="method_name" name="method_name" placeholder="run">
+        <button type="button" onclick="runScript()">Run</button>
+    </form>
+    <div id="result">
+        <h2>Result:</h2>
+        <pre id="resultContent"></pre>
+    </div>
+    <script>
+        function runScript() {
+            const script = document.getElementById('script').value;
+            const params = JSON.parse(document.getElementById('params').value);
+            const className = document.getElementById('class_name').value;
+            const methodName = document.getElementById('method_name').value;
+
+            fetch('/run_script', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    script: script,
+                    params: params,
+                    class_name: className,
+                    method_name: methodName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('resultContent').textContent = `Result: ${data.result}\n\nSTDOUT:\n${data.stdout}\n\nSTDERR:\n${data.stderr}`;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
